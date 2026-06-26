@@ -1,6 +1,6 @@
 import { NavLink } from 'react-router-dom';
 import { LayoutDashboard, LineChart, Briefcase, Wallet, Sparkles, Settings } from 'lucide-react';
-import { cn } from '../../lib/cn.js';
+import { cn } from '../../utils/cn'
 
 const navItems = [
   { to: '/dashboard', label: 'Dashboard', icon: LayoutDashboard },

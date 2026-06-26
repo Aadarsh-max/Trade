@@ -1,6 +1,6 @@
 import { motion } from 'framer-motion';
 import { ArrowDownLeft, ArrowUpRight, TrendingUp, TrendingDown } from 'lucide-react';
-import { formatCurrency, formatDate } from '../../../lib/formatters';
+import { formatCurrency, formatDate } from '../../../utils/formatters'
 
 const typeConfig = {
   DEPOSIT: { icon: ArrowDownLeft, label: 'Deposit', color: 'text-success' },

@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+import { useSearchParams } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { Plus, Minus, Wallet as WalletIcon } from 'lucide-react';
 import { useWalletStore } from '../features/wallet/walletSlice';
@@ -6,7 +7,7 @@ import DepositModal from '../features/wallet/components/DepositModal';
 import WithdrawModal from '../features/wallet/components/WithdrawModal';
 import TransactionHistory from '../features/wallet/components/TransactionHistory';
 import Button from '../components/common/Button';
-import { formatCurrency } from '../lib/formatters';
+import { formatCurrency } from '../utils/formatters';
 
 const WalletPage = () => {
   const {
@@ -18,20 +19,42 @@ const WalletPage = () => {
     error,
     fetchBalance,
     fetchTransactions,
-    deposit,
     withdraw,
   } = useWalletStore();
 
   const [depositOpen, setDepositOpen] = useState(false);
   const [withdrawOpen, setWithdrawOpen] = useState(false);
+  const [searchParams, setSearchParams] = useSearchParams();
+  const paymentStatus = searchParams.get('payment_status');
 
   useEffect(() => {
     fetchBalance();
     fetchTransactions();
   }, []);
 
+  useEffect(() => {
+    if (paymentStatus === 'success') {
+      const timer = setTimeout(() => {
+        fetchBalance();
+        fetchTransactions();
+        setSearchParams({});
+      }, 2000);
+      return () => clearTimeout(timer);
+    }
+  }, [paymentStatus]);
+
   return (
     <div>
+      {paymentStatus === 'success' && (
+        <motion.div
+          initial={{ opacity: 0, y: -8 }}
+          animate={{ opacity: 1, y: 0 }}
+          className="bg-success/10 border border-success/30 rounded-control px-4 py-3 mb-4 text-success text-sm"
+        >
+          Payment received, confirming your deposit...
+        </motion.div>
+      )}
+
       <h1 className="text-xl font-medium text-textprimary mb-6">Wallet</h1>
 
       <motion.div
@@ -70,13 +93,7 @@ const WalletPage = () => {
         <TransactionHistory transactions={transactions} />
       </div>
 
-      <DepositModal
-        isOpen={depositOpen}
-        onClose={() => setDepositOpen(false)}
-        onDeposit={deposit}
-        loading={actionLoading}
-        error={error}
-      />
+      <DepositModal isOpen={depositOpen} onClose={() => setDepositOpen(false)} />
 
       <WithdrawModal
         isOpen={withdrawOpen}

@@ -1,61 +1,54 @@
 import { useState } from 'react';
+import { motion } from 'framer-motion';
 import Modal from '../../../components/common/Modal';
-import Input from '../../../components/common/Input';
-import Button from '../../../components/common/Button';
-import ErrorText from '../../../components/common/ErrorText';
+import StripeCheckout from '../../payments/components/StripeCheckout';
+import RazorpayCheckout from '../../payments/components/RazorpayCheckout';
+import { cn } from '../../../utils/cn';
 
-const DepositModal = ({ isOpen, onClose, onDeposit, loading, error }) => {
-  const [amount, setAmount] = useState('');
-  const [localError, setLocalError] = useState('');
+const DepositModal = ({ isOpen, onClose }) => {
+  const [provider, setProvider] = useState('razorpay');
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    const numAmount = parseFloat(amount);
-
-    if (!numAmount || numAmount <= 0) {
-      setLocalError('Enter a valid amount');
-      return;
-    }
-
-    setLocalError('');
-    const success = await onDeposit(numAmount);
-    if (success) {
-      setAmount('');
+  const handleSuccess = () => {
+    setTimeout(() => {
       onClose();
-    }
+    }, 1500);
   };
 
   return (
     <Modal isOpen={isOpen} onClose={onClose} title="Add funds">
-      <form onSubmit={handleSubmit}>
-        <label className="text-textsecondary text-xs mb-2 block">Amount</label>
-        <Input
-          type="number"
-          step="0.01"
-          placeholder="0.00"
-          value={amount}
-          onChange={(e) => setAmount(e.target.value)}
-          autoFocus
-        />
-        <ErrorText>{localError || error}</ErrorText>
+      <div className="flex gap-2 mb-5">
+        <button
+          onClick={() => setProvider('razorpay')}
+          className={cn(
+            'flex-1 h-9 rounded-control text-xs font-medium transition-colors border',
+            provider === 'razorpay'
+              ? 'bg-accent text-white border-accent'
+              : 'bg-glass text-textsecondary border-bordersubtle hover:text-textprimary'
+          )}
+        >
+          Razorpay
+        </button>
+        <button
+          onClick={() => setProvider('stripe')}
+          className={cn(
+            'flex-1 h-9 rounded-control text-xs font-medium transition-colors border',
+            provider === 'stripe'
+              ? 'bg-accent text-white border-accent'
+              : 'bg-glass text-textsecondary border-bordersubtle hover:text-textprimary'
+          )}
+        >
+          Stripe
+        </button>
+      </div>
 
-        <div className="flex gap-2 mt-5">
-          {[500, 1000, 5000].map((preset) => (
-            <button
-              key={preset}
-              type="button"
-              onClick={() => setAmount(String(preset))}
-              className="flex-1 h-9 rounded-control bg-glass border border-bordersubtle text-textsecondary text-xs hover:text-textprimary hover:border-borderstrong transition-colors"
-            >
-              ₹{preset}
-            </button>
-          ))}
-        </div>
-
-        <Button type="submit" loading={loading} className="w-full mt-5">
-          Add funds
-        </Button>
-      </form>
+      <motion.div
+        key={provider}
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ duration: 0.15 }}
+      >
+        {provider === 'razorpay' ? <RazorpayCheckout onSuccess={handleSuccess} /> : <StripeCheckout />}
+      </motion.div>
     </Modal>
   );
 };
