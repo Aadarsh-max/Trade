@@ -1,6 +1,6 @@
-import LoginForm from '../features/auth/components/LoginForm';
+import SignupForm from '../features/auth/components/SignupForm';
 
-const LoginPage = () => {
+const SignupPage = () => {
   return (
     <div className="min-h-screen flex items-center justify-center bg-page px-4">
       <div
@@ -11,10 +11,10 @@ const LoginPage = () => {
         }}
       />
       <div className="relative z-10">
-        <LoginForm />
+        <SignupForm />
       </div>
     </div>
   );
 };
 
-export default LoginPage;
+export default SignupPage;

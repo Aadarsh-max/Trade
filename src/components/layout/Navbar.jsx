@@ -1,8 +1,10 @@
-import { Bell } from 'lucide-react';
-import { useAuthStore } from '../../store/authStore.js';
+import { Bell, LogOut } from 'lucide-react';
+import { useAuthStore } from '../../store/authStore';
+import { useAuth } from '../../features/auth/hooks/useAuth';
 
 const Navbar = () => {
   const user = useAuthStore((state) => state.user);
+  const { logout } = useAuth();
 
   const initials = user?.fullName
     ? user.fullName.split(' ').map((n) => n[0]).join('').slice(0, 2).toUpperCase()
@@ -18,6 +20,12 @@ const Navbar = () => {
         <div className="w-9 h-9 rounded-full bg-success flex items-center justify-center text-white text-xs font-medium">
           {initials}
         </div>
+        <button
+          onClick={logout}
+          className="w-9 h-9 rounded-full bg-glass border border-borderSubtle flex items-center justify-center text-textSecondary hover:text-danger transition-colors"
+        >
+          <LogOut size={16} />
+        </button>
       </div>
     </header>
   );

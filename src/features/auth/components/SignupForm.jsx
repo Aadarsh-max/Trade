@@ -1,0 +1,106 @@
+import { useState } from 'react';
+import { Link } from 'react-router-dom';
+import { motion } from 'framer-motion';
+import { Mail, Lock, User } from 'lucide-react';
+import Input from '../../../components/common/Input';
+import Button from '../../../components/common/Button';
+import ErrorText from '../../../components/common/ErrorText';
+import { useAuth } from '../hooks/useAuth';
+
+const SignupForm = () => {
+  const { signup, loading, error } = useAuth();
+  const [formData, setFormData] = useState({ fullName: '', email: '', password: '' });
+  const [fieldErrors, setFieldErrors] = useState({});
+
+  const validate = () => {
+    const errors = {};
+    if (formData.fullName.trim().length < 2) errors.fullName = 'Enter your full name';
+    if (!formData.email.includes('@')) errors.email = 'Enter a valid email';
+    if (formData.password.length < 8) errors.password = 'Password must be at least 8 characters';
+    setFieldErrors(errors);
+    return Object.keys(errors).length === 0;
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    if (!validate()) return;
+    await signup(formData);
+  };
+
+  return (
+    <motion.form
+      initial={{ opacity: 0, y: 12 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.4, ease: 'easeOut' }}
+      onSubmit={handleSubmit}
+      className="w-full max-w-sm"
+    >
+      <h1 className="text-2xl font-medium text-textPrimary mb-1">Create your account</h1>
+      <p className="text-textSecondary text-sm mb-8">Start trading in minutes</p>
+
+      <div className="mb-4">
+        <div className="relative">
+          <User size={16} className="absolute left-3.5 top-1/2 -translate-y-1/2 text-textMuted" />
+          <Input
+            type="text"
+            placeholder="Full name"
+            className="pl-10"
+            error={fieldErrors.fullName}
+            value={formData.fullName}
+            onChange={(e) => setFormData({ ...formData, fullName: e.target.value })}
+          />
+        </div>
+        <ErrorText>{fieldErrors.fullName}</ErrorText>
+      </div>
+
+      <div className="mb-4">
+        <div className="relative">
+          <Mail size={16} className="absolute left-3.5 top-1/2 -translate-y-1/2 text-textMuted" />
+          <Input
+            type="email"
+            placeholder="you@example.com"
+            className="pl-10"
+            error={fieldErrors.email}
+            value={formData.email}
+            onChange={(e) => setFormData({ ...formData, email: e.target.value })}
+          />
+        </div>
+        <ErrorText>{fieldErrors.email}</ErrorText>
+      </div>
+
+      <div className="mb-2">
+        <div className="relative">
+          <Lock size={16} className="absolute left-3.5 top-1/2 -translate-y-1/2 text-textMuted" />
+          <Input
+            type="password"
+            placeholder="••••••••"
+            className="pl-10"
+            error={fieldErrors.password}
+            value={formData.password}
+            onChange={(e) => setFormData({ ...formData, password: e.target.value })}
+          />
+        </div>
+        <ErrorText>{fieldErrors.password}</ErrorText>
+      </div>
+
+      {error && (
+        <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="mb-4">
+          <ErrorText>{error}</ErrorText>
+        </motion.div>
+      )}
+
+      <Button type="submit" loading={loading} className="w-full mt-4">
+        Create account
+      </Button>
+
+      <p className="text-textSecondary text-sm text-center mt-6">
+        Already have an account?{' '}
+        <Link to="/login" className="text-accent hover:text-accentStrong transition-colors">
+          Log in
+        </Link>
+      </p>
+    </motion.form>
+  );
+};
+
+export default SignupForm;
