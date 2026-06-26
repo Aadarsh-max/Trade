@@ -1,25 +1,23 @@
 @import "tailwindcss";
 
+@theme {
+  --color-page: #0a0e14;
+  --color-glass: rgba(255, 255, 255, 0.04);
+  --color-surface: rgba(255, 255, 255, 0.03);
+  --color-bordersubtle: rgba(255, 255, 255, 0.08);
+  --color-borderstrong: rgba(255, 255, 255, 0.14);
 
-:root {
-  --bg-page: #0a0e14;
-  --bg-surface: rgba(255, 255, 255, 0.03);
-  --bg-surface-strong: rgba(255, 255, 255, 0.05);
-  --bg-glass: rgba(255, 255, 255, 0.04);
-  --border-subtle: rgba(255, 255, 255, 0.08);
-  --border-strong: rgba(255, 255, 255, 0.14);
+  --color-textprimary: #ffffff;
+  --color-textsecondary: #9c9fa8;
+  --color-textmuted: #5c5f68;
 
-  --text-primary: #ffffff;
-  --text-secondary: #9c9fa8;
-  --text-muted: #5c5f68;
-
-  --accent-purple: #7f77dd;
-  --accent-purple-strong: #534ab7;
-  --success: #1d9e75;
-  --success-soft: #5dcaa5;
-  --danger: #e24b4a;
-  --danger-soft: #f09595;
-  --warning: #ef9f27;
+  --color-accent: #7f77dd;
+  --color-accentstrong: #534ab7;
+  --color-success: #1d9e75;
+  --color-successsoft: #5dcaa5;
+  --color-danger: #e24b4a;
+  --color-dangersoft: #f09595;
+  --color-warning: #ef9f27;
 
   --radius-card: 14px;
   --radius-control: 8px;
@@ -30,23 +28,18 @@
 }
 
 body {
-  background-color: var(--bg-page);
-  color: var(--text-primary);
+  background-color: var(--color-page);
+  color: var(--color-textprimary);
   font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
   margin: 0;
 }
 
-.glass-card {
-  background: var(--bg-glass);
-  backdrop-filter: blur(12px);
-  border: 0.5px solid var(--border-subtle);
-  border-radius: var(--radius-card);
-}
-
-.flat-card {
-  background: var(--bg-surface);
-  border: 0.5px solid var(--border-subtle);
-  border-radius: var(--radius-card);
+input:-webkit-autofill,
+input:-webkit-autofill:hover,
+input:-webkit-autofill:focus {
+  -webkit-text-fill-color: var(--color-textprimary);
+  -webkit-box-shadow: 0 0 0 1000px var(--color-glass) inset;
+  transition: background-color 5000s ease-in-out 0s;
 }
 
 ::-webkit-scrollbar {
@@ -55,7 +48,7 @@ body {
 }
 
 ::-webkit-scrollbar-thumb {
-  background: var(--border-strong);
+  background: var(--color-borderstrong);
   border-radius: 4px;
 }
 
