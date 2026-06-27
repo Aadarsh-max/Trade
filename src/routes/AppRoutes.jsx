@@ -4,6 +4,7 @@ import SignupPage from '../pages/SignupPage';
 import DashboardPage from '../pages/DashboardPage';
 import WalletPage from '../pages/WalletPage';
 import TradePage from '../pages/TradePage';
+import PortfolioPage from '../pages/PortfolioPage';
 import DashboardLayout from '../components/layout/DashboardLayout';
 import ProtectedRoute from './ProtectedRoute';
 
@@ -23,6 +24,7 @@ const AppRoutes = () => {
         <Route path="/dashboard" element={<DashboardPage />} />
         <Route path="/wallet" element={<WalletPage />} />
         <Route path="/trade" element={<TradePage />} />
+        <Route path="/portfolio" element={<PortfolioPage />} />
       </Route>
 
       <Route path="*" element={<Navigate to="/dashboard" replace />} />
