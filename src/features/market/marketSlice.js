@@ -1,5 +1,6 @@
 import { create } from 'zustand';
 import { getQuoteApi, getCandlesApi, getBatchQuotesApi } from '../../api/market.api';
+import { getSocket } from '../../sockets/socket.client';
 
 const DEFAULT_WATCHLIST = ['BTCUSDT', 'ETHUSDT', 'SOLUSDT', 'BNBUSDT', 'XRPUSDT'];
 
@@ -37,8 +38,11 @@ export const useMarketStore = create((set, get) => ({
   },
 
   selectSymbol: (symbol) => {
+    const previousSymbol = get().selectedSymbol;
+    get().unsubscribeFromSymbol(previousSymbol);
     set({ selectedSymbol: symbol });
     get().fetchCandles(symbol);
+    get().subscribeToSymbol(symbol);
   },
 
   updateQuote: (symbol, quote) => {
@@ -51,13 +55,33 @@ export const useMarketStore = create((set, get) => ({
     const upperSymbol = symbol.toUpperCase();
     if (!get().watchlist.includes(upperSymbol)) {
       set((state) => ({ watchlist: [...state.watchlist, upperSymbol] }));
+      get().subscribeToSymbol(upperSymbol);
       get().fetchWatchlistQuotes();
     }
   },
 
   removeFromWatchlist: (symbol) => {
+    get().unsubscribeFromSymbol(symbol);
     set((state) => ({
       watchlist: state.watchlist.filter((s) => s !== symbol),
     }));
+  },
+
+  subscribeToSymbol: (symbol) => {
+    const socket = getSocket();
+    if (socket) {
+      socket.emit('subscribe:symbol', symbol);
+    }
+  },
+
+  unsubscribeFromSymbol: (symbol) => {
+    const socket = getSocket();
+    if (socket) {
+      socket.emit('unsubscribe:symbol', symbol);
+    }
+  },
+
+  subscribeToWatchlist: () => {
+    get().watchlist.forEach((symbol) => get().subscribeToSymbol(symbol));
   },
 }));

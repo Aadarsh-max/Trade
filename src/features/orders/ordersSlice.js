@@ -6,7 +6,6 @@ export const useOrdersStore = create((set, get) => ({
   loading: false,
   placingOrder: false,
   error: null,
-  lastFillNotice: null,
 
   fetchOrders: async (params = {}) => {
     set({ loading: true });
@@ -43,6 +42,13 @@ export const useOrdersStore = create((set, get) => ({
     }
   },
 
-  setLastFillNotice: (notice) => set({ lastFillNotice: notice }),
-  clearFillNotice: () => set({ lastFillNotice: null }),
+  handleOrderFilled: (data) => {
+    set((state) => {
+      const exists = state.orders.some((o) => o.id === data.order.id);
+      if (exists) {
+        return { orders: state.orders.map((o) => (o.id === data.order.id ? data.order : o)) };
+      }
+      return { orders: [data.order, ...state.orders] };
+    });
+  },
 }));

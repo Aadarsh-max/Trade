@@ -7,14 +7,6 @@ import AllocationChart from '../features/portfolio/components/AllocationChart';
 
 const PortfolioPage = () => {
   const { holdings, summary, loading, fetchAll } = usePortfolioStore();
-
-  useEffect(() => {
-    fetchAll();
-
-    const interval = setInterval(() => fetchAll(), 10000);
-    return () => clearInterval(interval);
-  }, []);
-
   return (
     <div>
       <h1 className="text-xl font-medium text-textprimary mb-6">Portfolio</h1>
