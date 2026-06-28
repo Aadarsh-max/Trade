@@ -1,20 +1,27 @@
-import { useState } from 'react';
-import { motion } from 'framer-motion';
-import { Plus, X, TrendingUp, TrendingDown } from 'lucide-react';
-import { useMarketStore } from '../marketSlice';
-import { formatCurrency } from '../../../utils/formatters';
+import { useState } from "react";
+import { motion } from "framer-motion";
+import { Plus, X, TrendingUp, TrendingDown } from "lucide-react";
+import { useMarketStore } from "../marketSlice";
+import SentimentBadge from "../../ai/components/SentimentBadge";
+import { formatCurrency } from "../../../utils/formatters";
 
 const Watchlist = () => {
-  const { watchlist, quotes, selectedSymbol, selectSymbol, addToWatchlist, removeFromWatchlist } =
-    useMarketStore();
-  const [newSymbol, setNewSymbol] = useState('');
+  const {
+    watchlist,
+    quotes,
+    selectedSymbol,
+    selectSymbol,
+    addToWatchlist,
+    removeFromWatchlist,
+  } = useMarketStore();
+  const [newSymbol, setNewSymbol] = useState("");
   const [showInput, setShowInput] = useState(false);
 
   const handleAdd = (e) => {
     e.preventDefault();
     if (newSymbol.trim()) {
       addToWatchlist(newSymbol.trim());
-      setNewSymbol('');
+      setNewSymbol("");
       setShowInput(false);
     }
   };
@@ -34,7 +41,7 @@ const Watchlist = () => {
       {showInput && (
         <motion.form
           initial={{ opacity: 0, height: 0 }}
-          animate={{ opacity: 1, height: 'auto' }}
+          animate={{ opacity: 1, height: "auto" }}
           onSubmit={handleAdd}
           className="mb-3"
         >
@@ -58,16 +65,21 @@ const Watchlist = () => {
               key={symbol}
               onClick={() => selectSymbol(symbol)}
               className={`group flex items-center justify-between px-3 py-2.5 rounded-control cursor-pointer transition-colors ${
-                isSelected ? 'bg-accent/10' : 'hover:bg-glass'
+                isSelected ? "bg-accent/10" : "hover:bg-glass"
               }`}
             >
-              <span className="text-textprimary text-sm">{symbol.replace('USDT', '')}</span>
+              <span className="text-textprimary text-sm">
+                {symbol.replace("USDT", "")}
+              </span>
               <div className="flex items-center gap-2">
                 {quote ? (
-                  <span className="text-textsecondary text-xs">{formatCurrency(quote.price, 'USD')}</span>
+                  <span className="text-textsecondary text-xs">
+                    {formatCurrency(quote.price, "USD")}
+                  </span>
                 ) : (
                   <div className="h-3 w-12 bg-glass rounded animate-pulse" />
                 )}
+                <SentimentBadge symbol={symbol} />
                 <button
                   onClick={(e) => {
                     e.stopPropagation();
