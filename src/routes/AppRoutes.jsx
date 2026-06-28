@@ -6,6 +6,7 @@ import WalletPage from '../pages/WalletPage';
 import TradePage from '../pages/TradePage';
 import PortfolioPage from '../pages/PortfolioPage';
 import AIPage from '../pages/AIPage';
+import SettingsPage from '../pages/SettingsPage';
 import DashboardLayout from '../components/layout/DashboardLayout';
 import ProtectedRoute from './ProtectedRoute';
 
@@ -27,6 +28,7 @@ const AppRoutes = () => {
         <Route path="/trade" element={<TradePage />} />
         <Route path="/portfolio" element={<PortfolioPage />} />
         <Route path="/ai" element={<AIPage />} />
+        <Route path="/settings" element={<SettingsPage />} />
       </Route>
 
       <Route path="*" element={<Navigate to="/dashboard" replace />} />

@@ -1,16 +1,18 @@
-import { motion } from 'framer-motion';
-import { formatCurrency } from '../../../utils/formatters';
+import { motion } from "framer-motion";
+import { formatCurrency } from "../../../utils/formatters";
+import { Briefcase } from "lucide-react";
+import EmptyState from "../../../components/common/EmptyState";
 
 const HoldingsTable = ({ holdings }) => {
   if (holdings.length === 0) {
     return (
-      <div className="text-center py-10">
-        <p className="text-textmuted text-sm">No holdings yet</p>
-        <p className="text-textmuted text-xs mt-1">Start trading to build your portfolio</p>
-      </div>
+      <EmptyState
+        icon={Briefcase}
+        title="No holdings yet"
+        description="Start trading to build your portfolio"
+      />
     );
   }
-
   return (
     <div className="overflow-x-auto">
       <table className="w-full text-sm">
@@ -36,16 +38,28 @@ const HoldingsTable = ({ holdings }) => {
                 transition={{ delay: index * 0.04 }}
                 className="border-b border-bordersubtle last:border-0"
               >
-                <td className="py-3 px-2 text-textprimary font-medium">{holding.symbol.replace('USDT', '')}</td>
-                <td className="py-3 px-2 text-right text-textsecondary">{holding.quantity}</td>
-                <td className="py-3 px-2 text-right text-textsecondary">{formatCurrency(holding.avgBuyPrice, 'USD')}</td>
-                <td className="py-3 px-2 text-right text-textsecondary">{formatCurrency(holding.currentPrice, 'USD')}</td>
-                <td className="py-3 px-2 text-right text-textprimary">{formatCurrency(holding.currentValue, 'USD')}</td>
-                <td className={`py-3 px-2 text-right font-medium ${isPositive ? 'text-success' : 'text-danger'}`}>
-                  {isPositive ? '+' : ''}
-                  {formatCurrency(holding.unrealizedPnl, 'USD')}
+                <td className="py-3 px-2 text-textprimary font-medium">
+                  {holding.symbol.replace("USDT", "")}
+                </td>
+                <td className="py-3 px-2 text-right text-textsecondary">
+                  {holding.quantity}
+                </td>
+                <td className="py-3 px-2 text-right text-textsecondary">
+                  {formatCurrency(holding.avgBuyPrice, "USD")}
+                </td>
+                <td className="py-3 px-2 text-right text-textsecondary">
+                  {formatCurrency(holding.currentPrice, "USD")}
+                </td>
+                <td className="py-3 px-2 text-right text-textprimary">
+                  {formatCurrency(holding.currentValue, "USD")}
+                </td>
+                <td
+                  className={`py-3 px-2 text-right font-medium ${isPositive ? "text-success" : "text-danger"}`}
+                >
+                  {isPositive ? "+" : ""}
+                  {formatCurrency(holding.unrealizedPnl, "USD")}
                   <span className="text-xs ml-1 opacity-70">
-                    ({isPositive ? '+' : ''}
+                    ({isPositive ? "+" : ""}
                     {holding.unrealizedPnlPercent.toFixed(1)}%)
                   </span>
                 </td>
