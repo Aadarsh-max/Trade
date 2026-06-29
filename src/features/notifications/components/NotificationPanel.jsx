@@ -17,6 +17,13 @@ const colorMap = {
   WITHDRAWAL: 'text-textsecondary',
 };
 
+const bgMap = {
+  ORDER_FILLED: 'bg-success/12',
+  ORDER_REJECTED: 'bg-danger/12',
+  DEPOSIT: 'bg-success/12',
+  WITHDRAWAL: 'bg-glass',
+};
+
 const formatTimeAgo = (dateString) => {
   const diffMs = Date.now() - new Date(dateString).getTime();
   const diffMins = Math.floor(diffMs / 60000);
@@ -40,14 +47,21 @@ const NotificationPanel = ({ isOpen, onClose }) => {
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0, y: -8, scale: 0.97 }}
             transition={{ duration: 0.15 }}
-            className="absolute right-0 top-12 w-80 bg-page border border-bordersubtle rounded-card shadow-lg z-50 max-h-105 flex flex-col"
+            className="absolute right-0 top-12 z-50 flex max-h-105 w-80 flex-col overflow-hidden rounded-card border border-bordersubtle bg-surface shadow-2xl"
           >
-            <div className="flex items-center justify-between px-4 py-3 border-b border-bordersubtle">
-              <p className="text-textprimary text-sm font-medium">Notifications</p>
+            <div className="flex items-center justify-between border-b border-bordersubtle bg-glass px-4 py-3">
+              <div className="flex items-center gap-2">
+                <p className="text-sm font-semibold text-textprimary">Notifications</p>
+                {unreadCount > 0 && (
+                  <span className="flex h-5 min-w-5 items-center justify-center rounded-full bg-accent px-1.5 text-[10px] font-semibold text-white">
+                    {unreadCount}
+                  </span>
+                )}
+              </div>
               {unreadCount > 0 && (
                 <button
                   onClick={markAllAsRead}
-                  className="text-accent text-xs flex items-center gap-1 hover:text-accentstrong"
+                  className="flex cursor-pointer items-center gap-1 rounded-control px-2 py-1 text-xs font-medium text-accent transition-colors hover:bg-accent/10 hover:text-accentstrong active:scale-95"
                 >
                   <CheckCheck size={12} />
                   Mark all read
@@ -55,29 +69,37 @@ const NotificationPanel = ({ isOpen, onClose }) => {
               )}
             </div>
 
-            <div className="overflow-y-auto flex-1">
+            <div className="flex-1 overflow-y-auto">
               {notifications.length === 0 ? (
                 <EmptyState title="No notifications yet" description="You'll see updates here as they happen" />
               ) : (
                 notifications.map((n) => {
                   const Icon = iconMap[n.type] || Wallet;
                   const color = colorMap[n.type] || 'text-textsecondary';
+                  const bg = bgMap[n.type] || 'bg-glass';
 
                   return (
                     <div
                       key={n._id}
                       onClick={() => !n.read && markAsRead(n._id)}
-                      className={`flex items-start gap-3 px-4 py-3 border-b border-bordersubtle last:border-0 cursor-pointer transition-colors ${
-                        n.read ? 'opacity-60' : 'hover:bg-glass'
+                      className={`group relative flex cursor-pointer items-start gap-3 border-b border-bordersubtle px-4 py-3 transition-colors last:border-0 ${
+                        n.read ? 'opacity-55 hover:opacity-80' : 'bg-accent/3 hover:bg-glass'
                       }`}
                     >
-                      <Icon size={15} className={`${color} mt-0.5 shrink-0`} />
-                      <div className="flex-1 min-w-0">
-                        <p className="text-textprimary text-sm">{n.title}</p>
-                        <p className="text-textmuted text-xs mt-0.5">{n.message}</p>
-                        <p className="text-textmuted text-xs mt-1">{formatTimeAgo(n.createdAt)}</p>
+                      <span className={`mt-0.5 flex h-8 w-8 shrink-0 items-center justify-center rounded-full ${bg}`}>
+                        <Icon size={15} className={color} />
+                      </span>
+                      <div className="min-w-0 flex-1">
+                        <p className="text-sm font-medium text-textprimary">{n.title}</p>
+                        <p className="mt-0.5 text-xs leading-relaxed text-textsecondary">{n.message}</p>
+                        <p className="mt-1 text-[11px] font-medium text-textmuted">{formatTimeAgo(n.createdAt)}</p>
                       </div>
-                      {!n.read && <div className="w-1.5 h-1.5 rounded-full bg-accent mt-1.5 shrink-0" />}
+                      {!n.read && (
+                        <span className="relative mt-1.5 flex h-2 w-2 shrink-0">
+                          <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-accent opacity-60" />
+                          <span className="relative inline-flex h-2 w-2 rounded-full bg-accent" />
+                        </span>
+                      )}
                     </div>
                   );
                 })
