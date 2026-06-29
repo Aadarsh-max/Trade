@@ -3,9 +3,9 @@ import { TrendingUp, TrendingDown, Minus } from 'lucide-react';
 import { getSentimentApi } from '../../../api/ai.api';
 
 const sentimentConfig = {
-  bullish: { icon: TrendingUp, color: 'text-success', bg: 'bg-success/15' },
-  bearish: { icon: TrendingDown, color: 'text-danger', bg: 'bg-danger/15' },
-  neutral: { icon: Minus, color: 'text-textsecondary', bg: 'bg-glass' },
+  bullish: { icon: TrendingUp, color: 'text-success', bg: 'bg-success/15', ring: 'ring-success/25' },
+  bearish: { icon: TrendingDown, color: 'text-danger', bg: 'bg-danger/15', ring: 'ring-danger/25' },
+  neutral: { icon: Minus, color: 'text-textsecondary', bg: 'bg-glass', ring: 'ring-bordersubtle' },
 };
 
 const SentimentBadge = ({ symbol }) => {
@@ -32,9 +32,17 @@ const SentimentBadge = ({ symbol }) => {
       <button
         onClick={checkSentiment}
         disabled={loading}
-        className="text-xs text-textmuted hover:text-accent transition-colors disabled:opacity-50"
+        className="inline-flex cursor-pointer items-center gap-1 rounded-control border border-bordersubtle bg-glass px-2 py-1 text-xs font-medium text-textmuted transition-all duration-200 hover:border-accent/40 hover:bg-accent/10 hover:text-accent active:scale-95 disabled:cursor-not-allowed disabled:opacity-50"
       >
-        {loading ? '...' : 'Check sentiment'}
+        {loading ? (
+          <>
+            <span className="h-1 w-1 animate-bounce rounded-full bg-current [animation-delay:-0.3s]" />
+            <span className="h-1 w-1 animate-bounce rounded-full bg-current [animation-delay:-0.15s]" />
+            <span className="h-1 w-1 animate-bounce rounded-full bg-current" />
+          </>
+        ) : (
+          'Check sentiment'
+        )}
       </button>
     );
   }
@@ -43,9 +51,12 @@ const SentimentBadge = ({ symbol }) => {
   const Icon = config.icon;
 
   return (
-    <div className={`flex items-center gap-1 px-2 py-0.5 rounded-control ${config.bg}`} title={sentiment.summary}>
-      <Icon size={11} className={config.color} />
-      <span className={`text-xs ${config.color} capitalize`}>{sentiment.sentiment}</span>
+    <div
+      className={`inline-flex animate-fade-in items-center gap-1.5 rounded-control px-2 py-1 text-xs font-semibold capitalize ring-1 ring-inset ${config.bg} ${config.color} ${config.ring}`}
+      title={sentiment.summary}
+    >
+      <Icon size={12} className={config.color} />
+      <span>{sentiment.sentiment}</span>
     </div>
   );
 };
