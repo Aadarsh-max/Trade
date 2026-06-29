@@ -15,15 +15,15 @@ const HoldingsTable = ({ holdings }) => {
   }
   return (
     <div className="overflow-x-auto">
-      <table className="w-full text-sm">
+      <table className="w-full border-separate border-spacing-0 text-sm">
         <thead>
-          <tr className="text-textmuted text-xs border-b border-bordersubtle">
-            <th className="text-left py-2 px-2 font-normal">Asset</th>
-            <th className="text-right py-2 px-2 font-normal">Quantity</th>
-            <th className="text-right py-2 px-2 font-normal">Avg buy price</th>
-            <th className="text-right py-2 px-2 font-normal">Current price</th>
-            <th className="text-right py-2 px-2 font-normal">Value</th>
-            <th className="text-right py-2 px-2 font-normal">P&L</th>
+          <tr className="text-xs text-textmuted">
+            <th className="border-b border-bordersubtle px-3 py-2.5 text-left font-medium">Asset</th>
+            <th className="border-b border-bordersubtle px-3 py-2.5 text-right font-medium">Quantity</th>
+            <th className="border-b border-bordersubtle px-3 py-2.5 text-right font-medium">Avg buy price</th>
+            <th className="border-b border-bordersubtle px-3 py-2.5 text-right font-medium">Current price</th>
+            <th className="border-b border-bordersubtle px-3 py-2.5 text-right font-medium">Value</th>
+            <th className="border-b border-bordersubtle px-3 py-2.5 text-right font-medium">P&L</th>
           </tr>
         </thead>
         <tbody>
@@ -36,32 +36,39 @@ const HoldingsTable = ({ holdings }) => {
                 initial={{ opacity: 0, x: -8 }}
                 animate={{ opacity: 1, x: 0 }}
                 transition={{ delay: index * 0.04 }}
-                className="border-b border-bordersubtle last:border-0"
+                className="group transition-colors hover:bg-glass/60"
               >
-                <td className="py-3 px-2 text-textprimary font-medium">
-                  {holding.symbol.replace("USDT", "")}
+                <td className="border-b border-bordersubtle px-3 py-3.5">
+                  <div className="flex items-center gap-2.5">
+                    <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-accent/12 text-[11px] font-bold text-accent">
+                      {holding.symbol.replace("USDT", "").slice(0, 3)}
+                    </span>
+                    <span className="font-semibold text-textprimary">{holding.symbol.replace("USDT", "")}</span>
+                  </div>
                 </td>
-                <td className="py-3 px-2 text-right text-textsecondary">
+                <td className="border-b border-bordersubtle px-3 py-3.5 text-right tabular-nums text-textsecondary">
                   {holding.quantity}
                 </td>
-                <td className="py-3 px-2 text-right text-textsecondary">
+                <td className="border-b border-bordersubtle px-3 py-3.5 text-right tabular-nums text-textsecondary">
                   {formatCurrency(holding.avgBuyPrice, "USD")}
                 </td>
-                <td className="py-3 px-2 text-right text-textsecondary">
+                <td className="border-b border-bordersubtle px-3 py-3.5 text-right tabular-nums text-textsecondary">
                   {formatCurrency(holding.currentPrice, "USD")}
                 </td>
-                <td className="py-3 px-2 text-right text-textprimary">
+                <td className="border-b border-bordersubtle px-3 py-3.5 text-right font-semibold tabular-nums text-textprimary">
                   {formatCurrency(holding.currentValue, "USD")}
                 </td>
-                <td
-                  className={`py-3 px-2 text-right font-medium ${isPositive ? "text-success" : "text-danger"}`}
-                >
-                  {isPositive ? "+" : ""}
-                  {formatCurrency(holding.unrealizedPnl, "USD")}
-                  <span className="text-xs ml-1 opacity-70">
-                    ({isPositive ? "+" : ""}
-                    {holding.unrealizedPnlPercent.toFixed(1)}%)
-                  </span>
+                <td className="border-b border-bordersubtle px-3 py-3.5 text-right">
+                  <div className="flex flex-col items-end">
+                    <span className={`font-semibold tabular-nums ${isPositive ? "text-success" : "text-danger"}`}>
+                      {isPositive ? "+" : ""}
+                      {formatCurrency(holding.unrealizedPnl, "USD")}
+                    </span>
+                    <span className={`mt-0.5 rounded px-1 text-[10px] font-semibold tabular-nums ${isPositive ? "bg-success/12 text-success" : "bg-danger/12 text-danger"}`}>
+                      {isPositive ? "+" : ""}
+                      {holding.unrealizedPnlPercent.toFixed(1)}%
+                    </span>
+                  </div>
                 </td>
               </motion.tr>
             );

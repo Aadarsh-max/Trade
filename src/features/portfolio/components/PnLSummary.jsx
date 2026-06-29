@@ -7,26 +7,32 @@ const MetricCard = ({ label, value, icon: Icon, accent, delay }) => (
     initial={{ opacity: 0, y: 8 }}
     animate={{ opacity: 1, y: 0 }}
     transition={{ delay }}
-    className={`rounded-card p-4 border ${
+    className={`group relative overflow-hidden rounded-card border p-4 shadow-sm transition-all duration-200 hover:-translate-y-0.5 hover:shadow-md ${
       accent === 'positive'
-        ? 'bg-success/10 border-success/25'
+        ? 'border-success/25 bg-linear-to-br from-success/12 to-transparent'
         : accent === 'negative'
-        ? 'bg-danger/10 border-danger/25'
-        : 'bg-glass border-bordersubtle'
+        ? 'border-danger/25 bg-linear-to-br from-danger/12 to-transparent'
+        : 'border-bordersubtle bg-surface'
     }`}
   >
-    <div className="flex items-center gap-2 mb-2">
-      <Icon
-        size={14}
-        className={
-          accent === 'positive' ? 'text-successsoft' : accent === 'negative' ? 'text-dangersoft' : 'text-textsecondary'
-        }
-      />
-      <span className="text-textsecondary text-xs">{label}</span>
+    <div className="mb-3 flex items-center justify-between">
+      <span className="text-xs font-medium text-textsecondary">{label}</span>
+      <span
+        className={`flex h-7 w-7 items-center justify-center rounded-full ${
+          accent === 'positive' ? 'bg-success/15' : accent === 'negative' ? 'bg-danger/15' : 'bg-glass'
+        }`}
+      >
+        <Icon
+          size={14}
+          className={
+            accent === 'positive' ? 'text-success' : accent === 'negative' ? 'text-danger' : 'text-textsecondary'
+          }
+        />
+      </span>
     </div>
     <p
-      className={`text-xl font-medium ${
-        accent === 'positive' ? 'text-successsoft' : accent === 'negative' ? 'text-dangersoft' : 'text-textprimary'
+      className={`text-xl font-bold tabular-nums tracking-tight ${
+        accent === 'positive' ? 'text-success' : accent === 'negative' ? 'text-danger' : 'text-textprimary'
       }`}
     >
       {value}
@@ -40,7 +46,7 @@ const PnlSummary = ({ summary }) => {
   const { netWorth, cashBalance, totalCurrentValue, totalUnrealizedPnl, totalRealizedPnl } = summary;
 
   return (
-    <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
+    <div className="grid grid-cols-2 gap-3 md:grid-cols-4">
       <MetricCard label="Net worth" value={formatCurrency(netWorth)} icon={Wallet} delay={0} />
       <MetricCard label="Holdings value" value={formatCurrency(totalCurrentValue)} icon={PieChart} delay={0.05} />
       <MetricCard
