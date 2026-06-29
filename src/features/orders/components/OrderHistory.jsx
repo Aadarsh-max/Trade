@@ -9,25 +9,32 @@ const statusColors = {
   REJECTED: 'text-danger',
 };
 
+const statusBg = {
+  FILLED: 'bg-success/12 text-success',
+  PENDING: 'bg-warning/12 text-warning',
+  CANCELLED: 'bg-glass text-textmuted',
+  REJECTED: 'bg-danger/12 text-danger',
+};
+
 const OrderHistory = () => {
   const { orders } = useOrdersStore();
 
   if (orders.length === 0) {
-    return <p className="text-textmuted text-sm text-center py-8">No orders yet</p>;
+    return <p className="py-10 text-center text-sm text-textmuted">No orders yet</p>;
   }
 
   return (
     <div className="overflow-x-auto">
-      <table className="w-full text-sm">
+      <table className="w-full border-separate border-spacing-0 text-sm">
         <thead>
-          <tr className="text-textmuted text-xs border-b border-bordersubtle">
-            <th className="text-left py-2 px-2 font-normal">Symbol</th>
-            <th className="text-left py-2 px-2 font-normal">Side</th>
-            <th className="text-left py-2 px-2 font-normal">Type</th>
-            <th className="text-right py-2 px-2 font-normal">Qty</th>
-            <th className="text-right py-2 px-2 font-normal">Price</th>
-            <th className="text-right py-2 px-2 font-normal">Status</th>
-            <th className="text-right py-2 px-2 font-normal">Date</th>
+          <tr className="text-xs text-textmuted">
+            <th className="border-b border-bordersubtle px-3 py-2.5 text-left font-medium">Symbol</th>
+            <th className="border-b border-bordersubtle px-3 py-2.5 text-left font-medium">Side</th>
+            <th className="border-b border-bordersubtle px-3 py-2.5 text-left font-medium">Type</th>
+            <th className="border-b border-bordersubtle px-3 py-2.5 text-right font-medium">Qty</th>
+            <th className="border-b border-bordersubtle px-3 py-2.5 text-right font-medium">Price</th>
+            <th className="border-b border-bordersubtle px-3 py-2.5 text-right font-medium">Status</th>
+            <th className="border-b border-bordersubtle px-3 py-2.5 text-right font-medium">Date</th>
           </tr>
         </thead>
         <tbody>
@@ -37,19 +44,25 @@ const OrderHistory = () => {
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               transition={{ delay: index * 0.02 }}
-              className="border-b border-bordersubtle last:border-0"
+              className="group transition-colors hover:bg-glass/60"
             >
-              <td className="py-2.5 px-2 text-textprimary">{order.symbol.replace('USDT', '')}</td>
-              <td className={`py-2.5 px-2 font-medium ${order.side === 'BUY' ? 'text-success' : 'text-danger'}`}>
-                {order.side}
+              <td className="border-b border-bordersubtle px-3 py-3 font-semibold text-textprimary">{order.symbol.replace('USDT', '')}</td>
+              <td className="border-b border-bordersubtle px-3 py-3">
+                <span className={`inline-flex items-center rounded-md px-1.5 py-0.5 text-xs font-bold ${order.side === 'BUY' ? 'bg-success/12 text-success' : 'bg-danger/12 text-danger'}`}>
+                  {order.side}
+                </span>
               </td>
-              <td className="py-2.5 px-2 text-textsecondary">{order.type}</td>
-              <td className="py-2.5 px-2 text-right text-textsecondary">{Number(order.quantity)}</td>
-              <td className="py-2.5 px-2 text-right text-textsecondary">
+              <td className="border-b border-bordersubtle px-3 py-3 text-textsecondary">{order.type}</td>
+              <td className="border-b border-bordersubtle px-3 py-3 text-right tabular-nums text-textsecondary">{Number(order.quantity)}</td>
+              <td className="border-b border-bordersubtle px-3 py-3 text-right tabular-nums text-textsecondary">
                 {order.filledPrice ? `$${Number(order.filledPrice).toLocaleString()}` : '—'}
               </td>
-              <td className={`py-2.5 px-2 text-right text-xs ${statusColors[order.status]}`}>{order.status}</td>
-              <td className="py-2.5 px-2 text-right text-textmuted text-xs">{formatDate(order.createdAt)}</td>
+              <td className="border-b border-bordersubtle px-3 py-3 text-right">
+                <span className={`inline-flex items-center rounded-full px-2 py-0.5 text-[10px] font-semibold ${statusBg[order.status] || 'bg-glass text-textmuted'}`}>
+                  {order.status}
+                </span>
+              </td>
+              <td className="border-b border-bordersubtle px-3 py-3 text-right text-xs tabular-nums text-textmuted">{formatDate(order.createdAt)}</td>
             </motion.tr>
           ))}
         </tbody>

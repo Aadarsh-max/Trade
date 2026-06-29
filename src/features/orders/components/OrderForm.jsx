@@ -65,18 +65,18 @@ const OrderForm = () => {
     <motion.div
       initial={{ opacity: 0, y: 8 }}
       animate={{ opacity: 1, y: 0 }}
-      className="bg-surface border border-bordersubtle rounded-card p-5"
+      className="rounded-card border border-bordersubtle bg-surface p-5 shadow-sm"
     >
-      <h2 className="text-textprimary text-base font-medium mb-4">Place order</h2>
+      <h2 className="mb-4 text-base font-semibold tracking-tight text-textprimary">Place order</h2>
 
-      <div className="flex gap-2 mb-4">
+      <div className="mb-4 grid grid-cols-2 gap-1 rounded-control bg-glass p-1">
         <button
           onClick={() => setSide('BUY')}
           className={cn(
-            'flex-1 h-10 rounded-control text-sm font-medium transition-colors border',
+            'h-9 cursor-pointer rounded-md text-sm font-semibold transition-all duration-200 active:scale-[0.98]',
             side === 'BUY'
-              ? 'bg-success text-white border-success'
-              : 'bg-glass text-textsecondary border-bordersubtle hover:text-textprimary'
+              ? 'bg-success text-white shadow-sm shadow-success/25'
+              : 'text-textsecondary hover:text-textprimary'
           )}
         >
           Buy
@@ -84,24 +84,24 @@ const OrderForm = () => {
         <button
           onClick={() => setSide('SELL')}
           className={cn(
-            'flex-1 h-10 rounded-control text-sm font-medium transition-colors border',
+            'h-9 cursor-pointer rounded-md text-sm font-semibold transition-all duration-200 active:scale-[0.98]',
             side === 'SELL'
-              ? 'bg-danger text-white border-danger'
-              : 'bg-glass text-textsecondary border-bordersubtle hover:text-textprimary'
+              ? 'bg-danger text-white shadow-sm shadow-danger/25'
+              : 'text-textsecondary hover:text-textprimary'
           )}
         >
           Sell
         </button>
       </div>
 
-      <div className="flex gap-2 mb-4">
+      <div className="mb-5 grid grid-cols-2 gap-2">
         <button
           onClick={() => setType('MARKET')}
           className={cn(
-            'flex-1 h-8 rounded-control text-xs transition-colors border',
+            'h-8 cursor-pointer rounded-control border text-xs font-medium transition-all duration-200 active:scale-[0.98]',
             type === 'MARKET'
-              ? 'bg-accent/15 text-accent border-accent/40'
-              : 'bg-transparent text-textsecondary border-bordersubtle hover:text-textprimary'
+              ? 'border-accent/40 bg-accent/12 text-accent'
+              : 'border-bordersubtle bg-transparent text-textsecondary hover:border-borderstrong hover:text-textprimary'
           )}
         >
           Market
@@ -109,10 +109,10 @@ const OrderForm = () => {
         <button
           onClick={() => setType('LIMIT')}
           className={cn(
-            'flex-1 h-8 rounded-control text-xs transition-colors border',
+            'h-8 cursor-pointer rounded-control border text-xs font-medium transition-all duration-200 active:scale-[0.98]',
             type === 'LIMIT'
-              ? 'bg-accent/15 text-accent border-accent/40'
-              : 'bg-transparent text-textsecondary border-bordersubtle hover:text-textprimary'
+              ? 'border-accent/40 bg-accent/12 text-accent'
+              : 'border-bordersubtle bg-transparent text-textsecondary hover:border-borderstrong hover:text-textprimary'
           )}
         >
           Limit
@@ -120,7 +120,7 @@ const OrderForm = () => {
       </div>
 
       <form onSubmit={handleSubmit}>
-        <label className="text-textsecondary text-xs mb-2 block">
+        <label className="mb-2 block text-xs font-medium text-textsecondary">
           Quantity ({selectedSymbol.replace('USDT', '')})
         </label>
         <Input
@@ -132,8 +132,8 @@ const OrderForm = () => {
         />
 
         {type === 'LIMIT' && (
-          <motion.div initial={{ opacity: 0, height: 0 }} animate={{ opacity: 1, height: 'auto' }} className="mt-3">
-            <label className="text-textsecondary text-xs mb-2 block">Limit price (USD)</label>
+          <motion.div initial={{ opacity: 0, height: 0 }} animate={{ opacity: 1, height: 'auto' }} className="mt-3 overflow-hidden">
+            <label className="mb-2 block text-xs font-medium text-textsecondary">Limit price (USD)</label>
             <Input
               type="number"
               step="0.01"
@@ -144,41 +144,51 @@ const OrderForm = () => {
           </motion.div>
         )}
 
-        <div className="flex justify-between items-center mt-4 px-1">
-          <span className="text-textmuted text-xs">Current price</span>
-          <span className="text-textsecondary text-xs">${currentPrice.toLocaleString()}</span>
+        <div className="mt-4 flex flex-col gap-2 rounded-control border border-bordersubtle bg-glass p-3">
+          <div className="flex items-center justify-between">
+            <span className="text-xs text-textmuted">Current price</span>
+            <span className="text-xs font-medium tabular-nums text-textsecondary">${currentPrice.toLocaleString()}</span>
+          </div>
+          <div className="flex items-center justify-between border-t border-bordersubtle pt-2">
+            <span className="text-xs text-textmuted">Estimated total</span>
+            <span className="text-sm font-semibold tabular-nums text-textprimary">
+              ${estimatedTotal.toLocaleString(undefined, { maximumFractionDigits: 2 })}
+            </span>
+          </div>
+          <div className="flex items-center justify-between">
+            <span className="text-xs text-textmuted">Available balance</span>
+            <span className="text-xs font-medium tabular-nums text-textsecondary">₹{balance.toLocaleString()}</span>
+          </div>
         </div>
 
-        <div className="flex justify-between items-center mt-1.5 px-1">
-          <span className="text-textmuted text-xs">Estimated total</span>
-          <span className="text-textprimary text-sm font-medium">
-            ${estimatedTotal.toLocaleString(undefined, { maximumFractionDigits: 2 })}
-          </span>
+        <div className="mt-4">
+          <ErrorText>{localError || error}</ErrorText>
         </div>
-
-        <div className="flex justify-between items-center mt-1.5 px-1 mb-4">
-          <span className="text-textmuted text-xs">Available balance</span>
-          <span className="text-textsecondary text-xs">₹{balance.toLocaleString()}</span>
-        </div>
-
-        <ErrorText>{localError || error}</ErrorText>
 
         {successMsg && (
-          <motion.p
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            className="text-successsoft text-xs mb-3"
+          <motion.div
+            initial={{ opacity: 0, y: -4 }}
+            animate={{ opacity: 1, y: 0 }}
+            className="mb-3 flex items-center gap-2 rounded-control border border-success/25 bg-success/10 px-3 py-2"
           >
-            {successMsg}
-          </motion.p>
+            <span className="h-1.5 w-1.5 shrink-0 rounded-full bg-success" />
+            <p className="text-xs font-medium text-success">{successMsg}</p>
+          </motion.div>
         )}
 
         <Button
           type="submit"
           loading={placingOrder}
-          className={cn('w-full', side === 'SELL' && 'bg-danger hover:bg-dangersoft')}
+          className={cn(
+            'mt-1 w-full',
+            side === 'BUY'
+              ? 'bg-success shadow-success/20 hover:bg-success/90 hover:shadow-success/25'
+              : 'bg-danger shadow-danger/20 hover:bg-danger/90 hover:shadow-danger/25'
+          )}
         >
-          {side === 'BUY' ? 'Buy' : 'Sell'} {selectedSymbol.replace('USDT', '')}
+          {placingOrder
+            ? 'Placing order…'
+            : `${side === 'BUY' ? 'Buy' : 'Sell'} ${selectedSymbol.replace('USDT', '')}`}
         </Button>
       </form>
     </motion.div>
