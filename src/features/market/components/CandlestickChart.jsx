@@ -14,29 +14,40 @@ const CandlestickChart = () => {
     const chart = createChart(containerRef.current, {
       layout: {
         background: { type: ColorType.Solid, color: 'transparent' },
-        textColor: '#9c9fa8',
+        textColor: '#5c606b',
+        fontFamily: "'Inter', -apple-system, BlinkMacSystemFont, sans-serif",
       },
       grid: {
-        vertLines: { color: 'rgba(255,255,255,0.04)' },
-        horzLines: { color: 'rgba(255,255,255,0.04)' },
+        vertLines: { color: 'rgba(15,23,42,0.05)' },
+        horzLines: { color: 'rgba(15,23,42,0.05)' },
       },
       width: containerRef.current.clientWidth,
       height: 360,
+      crosshair: {
+        vertLine: {
+          color: 'rgba(98,88,207,0.4)',
+          labelBackgroundColor: '#6258cf',
+        },
+        horzLine: {
+          color: 'rgba(98,88,207,0.4)',
+          labelBackgroundColor: '#6258cf',
+        },
+      },
       timeScale: {
         timeVisible: true,
-        borderColor: 'rgba(255,255,255,0.08)',
+        borderColor: 'rgba(15,23,42,0.1)',
       },
       rightPriceScale: {
-        borderColor: 'rgba(255,255,255,0.08)',
+        borderColor: 'rgba(15,23,42,0.1)',
       },
     });
 
     const series = chart.addSeries(CandlestickSeries, {
-      upColor: '#1d9e75',
-      downColor: '#e24b4a',
+      upColor: '#15976c',
+      downColor: '#d83a39',
       borderVisible: false,
-      wickUpColor: '#1d9e75',
-      wickDownColor: '#e24b4a',
+      wickUpColor: '#15976c',
+      wickDownColor: '#d83a39',
     });
 
     chartRef.current = chart;
@@ -75,8 +86,11 @@ const CandlestickChart = () => {
     <div className="relative">
       <div ref={containerRef} className="w-full" />
       {candlesLoading && (
-        <div className="absolute inset-0 flex items-center justify-center bg-page/60">
-          <div className="w-6 h-6 border-2 border-accent border-t-transparent rounded-full animate-spin" />
+        <div className="absolute inset-0 flex items-center justify-center bg-surface/70 backdrop-blur-sm">
+          <div className="flex flex-col items-center gap-3">
+            <div className="h-7 w-7 animate-spin rounded-full border-2 border-accent border-t-transparent" />
+            <span className="text-xs font-medium text-textsecondary">Loading chart…</span>
+          </div>
         </div>
       )}
     </div>
