@@ -14,7 +14,7 @@ const navItems = [
 ];
 
 const NavLinks = ({ onItemClick }) => (
-  <nav className="flex flex-col gap-1">
+  <nav className="flex flex-col gap-1.5">
     {navItems.map(({ to, label, icon: Icon }) => (
       <NavLink
         key={to}
@@ -22,26 +22,46 @@ const NavLinks = ({ onItemClick }) => (
         onClick={onItemClick}
         className={({ isActive }) =>
           cn(
-            'flex items-center gap-3 px-3 py-2.5 rounded-control text-sm transition-colors',
+            'group relative flex items-center gap-3 rounded-control px-3 py-2.5 text-sm font-medium transition-all duration-200 cursor-pointer',
             isActive
-              ? 'bg-glass text-textprimary border border-bordersubtle'
-              : 'text-textsecondary hover:text-textprimary hover:bg-glass'
+              ? 'bg-surface text-textprimary shadow-sm ring-1 ring-bordersubtle'
+              : 'text-textsecondary hover:bg-glass hover:text-textprimary'
           )
         }
       >
-        <Icon size={18} />
-        {label}
+        {({ isActive }) => (
+          <>
+            <span
+              className={cn(
+                'absolute left-0 top-1/2 h-5 w-1 -translate-y-1/2 rounded-r-full bg-accent transition-all duration-200',
+                isActive ? 'opacity-100' : 'opacity-0 group-hover:opacity-40'
+              )}
+            />
+            <Icon
+              size={18}
+              className={cn(
+                'shrink-0 transition-colors duration-200',
+                isActive ? 'text-accent' : 'text-textmuted group-hover:text-textprimary'
+              )}
+            />
+            <span className="truncate">{label}</span>
+          </>
+        )}
       </NavLink>
     ))}
   </nav>
 );
 
 const Logo = () => (
-  <div className="flex items-center gap-2 mb-8 px-2">
-    <div className="w-8 h-8 rounded-lg bg-linear-to-br from-accent to-accentstrong flex items-center justify-center">
+  <div className="mb-8 flex items-center gap-2.5 px-2">
+    <div className="relative flex h-9 w-9 items-center justify-center rounded-xl bg-linear-to-br from-accent to-accentstrong shadow-md shadow-accent/20">
       <LineChart size={18} className="text-white" />
+      <span className="absolute inset-0 rounded-xl ring-1 ring-inset ring-white/20" />
     </div>
-    <span className="text-textprimary font-medium text-base">Tradeflow</span>
+    <div className="flex flex-col leading-none">
+      <span className="text-base font-semibold tracking-tight text-textprimary">Tradeflow</span>
+      <span className="text-[10px] font-medium uppercase tracking-wider text-textmuted">Markets</span>
+    </div>
   </div>
 );
 
@@ -50,14 +70,25 @@ const Sidebar = () => {
 
   return (
     <>
-      <aside className="hidden md:flex flex-col w-60 h-screen sticky top-0 p-4 border-r border-bordersubtle">
+      <aside className="sticky top-0 hidden h-screen w-60 flex-col border-r border-bordersubtle bg-page/50 p-4 backdrop-blur-sm md:flex">
         <Logo />
         <NavLinks />
+        <div className="mt-auto rounded-card border border-bordersubtle bg-glass p-3">
+          <p className="text-xs font-medium text-textprimary">Markets open</p>
+          <p className="mt-0.5 text-[11px] text-textsecondary">Live data streaming</p>
+          <span className="mt-2 flex items-center gap-1.5">
+            <span className="relative flex h-2 w-2">
+              <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-success opacity-75" />
+              <span className="relative inline-flex h-2 w-2 rounded-full bg-success" />
+            </span>
+            <span className="text-[11px] font-medium text-success">Connected</span>
+          </span>
+        </div>
       </aside>
 
       <button
         onClick={() => setMobileOpen(true)}
-        className="md:hidden fixed top-4 left-4 z-40 w-9 h-9 rounded-full bg-glass border border-bordersubtle flex items-center justify-center text-textprimary"
+        className="fixed left-4 top-4 z-40 flex h-9 w-9 cursor-pointer items-center justify-center rounded-full border border-bordersubtle bg-surface text-textprimary shadow-sm transition-all duration-200 hover:border-borderstrong active:scale-95 md:hidden"
       >
         <Menu size={18} />
       </button>
@@ -70,18 +101,21 @@ const Sidebar = () => {
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
               onClick={() => setMobileOpen(false)}
-              className="md:hidden fixed inset-0 bg-black/60 z-40"
+              className="fixed inset-0 z-40 bg-black/40 backdrop-blur-sm md:hidden"
             />
             <motion.aside
               initial={{ x: -260 }}
               animate={{ x: 0 }}
               exit={{ x: -260 }}
               transition={{ type: 'tween', duration: 0.2 }}
-              className="md:hidden fixed top-0 left-0 h-screen w-60 bg-page border-r border-bordersubtle p-4 z-50"
+              className="fixed left-0 top-0 z-50 h-screen w-60 border-r border-bordersubtle bg-page p-4 shadow-2xl md:hidden"
             >
-              <div className="flex items-center justify-between mb-4">
+              <div className="mb-4 flex items-start justify-between">
                 <Logo />
-                <button onClick={() => setMobileOpen(false)} className="text-textsecondary">
+                <button
+                  onClick={() => setMobileOpen(false)}
+                  className="flex h-8 w-8 cursor-pointer items-center justify-center rounded-full text-textsecondary transition-colors hover:bg-glass hover:text-textprimary"
+                >
                   <X size={18} />
                 </button>
               </div>

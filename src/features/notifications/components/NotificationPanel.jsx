@@ -40,7 +40,7 @@ const NotificationPanel = ({ isOpen, onClose }) => {
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0, y: -8, scale: 0.97 }}
             transition={{ duration: 0.15 }}
-            className="absolute right-0 top-12 w-80 bg-page border border-bordersubtle rounded-card shadow-lg z-50 max-h-[420px] flex flex-col"
+            className="absolute right-0 top-12 w-80 bg-page border border-bordersubtle rounded-card shadow-lg z-50 max-h-105 flex flex-col"
           >
             <div className="flex items-center justify-between px-4 py-3 border-b border-bordersubtle">
               <p className="text-textprimary text-sm font-medium">Notifications</p>
@@ -71,13 +71,13 @@ const NotificationPanel = ({ isOpen, onClose }) => {
                         n.read ? 'opacity-60' : 'hover:bg-glass'
                       }`}
                     >
-                      <Icon size={15} className={`${color} mt-0.5 flex-shrink-0`} />
+                      <Icon size={15} className={`${color} mt-0.5 shrink-0`} />
                       <div className="flex-1 min-w-0">
                         <p className="text-textprimary text-sm">{n.title}</p>
                         <p className="text-textmuted text-xs mt-0.5">{n.message}</p>
                         <p className="text-textmuted text-xs mt-1">{formatTimeAgo(n.createdAt)}</p>
                       </div>
-                      {!n.read && <div className="w-1.5 h-1.5 rounded-full bg-accent mt-1.5 flex-shrink-0" />}
+                      {!n.read && <div className="w-1.5 h-1.5 rounded-full bg-accent mt-1.5 shrink-0" />}
                     </div>
                   );
                 })
