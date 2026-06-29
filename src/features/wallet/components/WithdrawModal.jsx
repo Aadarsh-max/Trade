@@ -33,20 +33,35 @@ const WithdrawModal = ({ isOpen, onClose, onWithdraw, loading, error, maxAmount 
   return (
     <Modal isOpen={isOpen} onClose={onClose} title="Withdraw funds">
       <form onSubmit={handleSubmit}>
-        <label className="text-textsecondary text-xs mb-2 block">Amount</label>
-        <Input
-          type="number"
-          step="0.01"
-          placeholder="0.00"
-          value={amount}
-          onChange={(e) => setAmount(e.target.value)}
-          autoFocus
-        />
-        <p className="text-textmuted text-xs mt-1.5">Available: ₹{maxAmount.toLocaleString()}</p>
+        <label className="mb-2 block text-xs font-medium text-textsecondary">Amount</label>
+        <div className="relative">
+          <span className="pointer-events-none absolute left-3.5 top-1/2 -translate-y-1/2 text-sm font-medium text-textmuted">₹</span>
+          <Input
+            type="number"
+            step="0.01"
+            placeholder="0.00"
+            value={amount}
+            onChange={(e) => setAmount(e.target.value)}
+            autoFocus
+            className="pl-8"
+          />
+        </div>
+
+        <div className="mt-2 flex items-center justify-between rounded-control border border-bordersubtle bg-glass px-3 py-2">
+          <span className="text-xs text-textmuted">Available balance</span>
+          <button
+            type="button"
+            onClick={() => setAmount(String(maxAmount))}
+            className="cursor-pointer text-xs font-semibold tabular-nums text-accent transition-colors hover:text-accentstrong"
+          >
+            ₹{maxAmount.toLocaleString()}
+          </button>
+        </div>
+
         <ErrorText>{localError || error}</ErrorText>
 
-        <Button type="submit" loading={loading} variant="ghost" className="w-full mt-5">
-          Withdraw
+        <Button type="submit" loading={loading} variant="ghost" className="mt-5 w-full">
+          {loading ? 'Withdrawing…' : 'Withdraw'}
         </Button>
       </form>
     </Modal>

@@ -16,14 +16,14 @@ const DepositModal = ({ isOpen, onClose }) => {
 
   return (
     <Modal isOpen={isOpen} onClose={onClose} title="Add funds">
-      <div className="flex gap-2 mb-5">
+      <div className="mb-5 grid grid-cols-2 gap-1 rounded-control bg-glass p-1">
         <button
           onClick={() => setProvider('razorpay')}
           className={cn(
-            'flex-1 h-9 rounded-control text-xs font-medium transition-colors border',
+            'h-9 cursor-pointer rounded-md text-xs font-semibold transition-all duration-200 active:scale-[0.98]',
             provider === 'razorpay'
-              ? 'bg-accent text-white border-accent'
-              : 'bg-glass text-textsecondary border-bordersubtle hover:text-textprimary'
+              ? 'bg-accent text-white shadow-sm shadow-accent/25'
+              : 'text-textsecondary hover:text-textprimary'
           )}
         >
           Razorpay
@@ -31,10 +31,10 @@ const DepositModal = ({ isOpen, onClose }) => {
         <button
           onClick={() => setProvider('stripe')}
           className={cn(
-            'flex-1 h-9 rounded-control text-xs font-medium transition-colors border',
+            'h-9 cursor-pointer rounded-md text-xs font-semibold transition-all duration-200 active:scale-[0.98]',
             provider === 'stripe'
-              ? 'bg-accent text-white border-accent'
-              : 'bg-glass text-textsecondary border-bordersubtle hover:text-textprimary'
+              ? 'bg-accent text-white shadow-sm shadow-accent/25'
+              : 'text-textsecondary hover:text-textprimary'
           )}
         >
           Stripe
@@ -43,8 +43,8 @@ const DepositModal = ({ isOpen, onClose }) => {
 
       <motion.div
         key={provider}
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
+        initial={{ opacity: 0, y: 4 }}
+        animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.15 }}
       >
         {provider === 'razorpay' ? <RazorpayCheckout onSuccess={handleSuccess} /> : <StripeCheckout />}
