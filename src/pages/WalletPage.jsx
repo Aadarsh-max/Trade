@@ -44,34 +44,46 @@ const WalletPage = () => {
   }, [paymentStatus]);
 
   return (
-    <div>
+    <div className="animate-fade-in">
       {paymentStatus === 'success' && (
         <motion.div
           initial={{ opacity: 0, y: -8 }}
           animate={{ opacity: 1, y: 0 }}
-          className="bg-success/10 border border-success/30 rounded-control px-4 py-3 mb-4 text-success text-sm"
+          className="mb-4 flex items-center gap-2 rounded-control border border-success/30 bg-success/10 px-4 py-3 text-sm font-medium text-success"
         >
-          Payment received, confirming your deposit...
+          <span className="relative flex h-2 w-2 shrink-0">
+            <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-success opacity-75" />
+            <span className="relative inline-flex h-2 w-2 rounded-full bg-success" />
+          </span>
+          Payment received, confirming your deposit…
         </motion.div>
       )}
 
-      <h1 className="text-xl font-medium text-textprimary mb-6">Wallet</h1>
+      <div className="mb-6">
+        <h1 className="text-xl font-bold tracking-tight text-textprimary">Wallet</h1>
+        <p className="mt-0.5 text-xs text-textsecondary">Manage your funds and transactions</p>
+      </div>
 
       <motion.div
         initial={{ opacity: 0, y: 8 }}
         animate={{ opacity: 1, y: 0 }}
-        className="bg-glass backdrop-blur-md border border-bordersubtle rounded-card p-6 mb-6"
+        className="relative mb-6 overflow-hidden rounded-card border border-bordersubtle bg-linear-to-br from-accent/12 via-surface to-surface p-6 shadow-sm"
       >
-        <div className="flex items-center justify-between">
+        <div className="pointer-events-none absolute -right-12 -top-12 h-40 w-40 rounded-full bg-accent/10 blur-3xl" />
+        <div className="relative flex flex-col gap-5 sm:flex-row sm:items-center sm:justify-between">
           <div>
-            <div className="flex items-center gap-2 mb-2">
-              <WalletIcon size={16} className="text-textsecondary" />
-              <span className="text-textsecondary text-sm">Available balance</span>
+            <div className="mb-2 flex items-center gap-2">
+              <span className="flex h-8 w-8 items-center justify-center rounded-full bg-accent/15">
+                <WalletIcon size={16} className="text-accent" />
+              </span>
+              <span className="text-sm font-medium text-textsecondary">Available balance</span>
             </div>
             {loading ? (
-              <div className="h-9 w-40 bg-surface rounded-control animate-pulse" />
+              <div className="h-10 w-44 animate-pulse rounded-control bg-glass" />
             ) : (
-              <p className="text-textprimary text-3xl font-medium">{formatCurrency(balance, currency)}</p>
+              <p className="text-3xl font-bold tracking-tight tabular-nums text-textprimary sm:text-4xl">
+                {formatCurrency(balance, currency)}
+              </p>
             )}
           </div>
 
@@ -80,7 +92,7 @@ const WalletPage = () => {
               <Plus size={16} />
               Add funds
             </Button>
-            <Button variant="ghost" onClick={() => setWithdrawOpen(true)}>
+            <Button variant="soft" onClick={() => setWithdrawOpen(true)}>
               <Minus size={16} />
               Withdraw
             </Button>
@@ -88,10 +100,15 @@ const WalletPage = () => {
         </div>
       </motion.div>
 
-      <div className="bg-surface border border-bordersubtle rounded-card p-6">
-        <h2 className="text-textprimary text-base font-medium mb-4">Transaction history</h2>
+      <motion.div
+        initial={{ opacity: 0, y: 8 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ delay: 0.05 }}
+        className="rounded-card border border-bordersubtle bg-surface p-6 shadow-sm"
+      >
+        <h2 className="mb-4 text-base font-semibold tracking-tight text-textprimary">Transaction history</h2>
         <TransactionHistory transactions={transactions} />
-      </div>
+      </motion.div>
 
       <DepositModal isOpen={depositOpen} onClose={() => setDepositOpen(false)} />
 
