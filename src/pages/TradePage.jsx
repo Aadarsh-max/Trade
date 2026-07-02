@@ -8,10 +8,12 @@ import Watchlist from "../features/market/components/Watchlist";
 import OrderForm from "../features/orders/components/OrderForm";
 import OrderBook from "../features/orders/components/OrderBook";
 import OrderHistory from "../features/orders/components/OrderHistory";
+import Loader from "../components/common/Loader";
 
 const TradePage = () => {
   const {
     selectedSymbol,
+    loading,
     fetchWatchlistQuotes,
     fetchCandles,
     subscribeToWatchlist,
@@ -24,6 +26,8 @@ const TradePage = () => {
     fetchOrders();
     subscribeToWatchlist();
   }, []);
+
+  if (loading) return <Loader fullPage text="Loading markets" />;
 
   return (
     <div className="animate-fade-in">

@@ -4,14 +4,24 @@ import { usePortfolioStore } from '../features/portfolio/portfolioSlice';
 import PnlSummary from '../features/portfolio/components/PnlSummary';
 import HoldingsTable from '../features/portfolio/components/HoldingsTable';
 import AllocationChart from '../features/portfolio/components/AllocationChart';
+import Loader from '../components/common/Loader';
 
 const PortfolioPage = () => {
   const { holdings, summary, loading, fetchAll } = usePortfolioStore();
+
+  useEffect(() => {
+    fetchAll();
+  }, []);
+
+  if (loading) return <Loader fullPage text="Loading portfolio" />;
+
   return (
     <div className="animate-fade-in">
       <div className="mb-6">
         <h1 className="text-xl font-bold tracking-tight text-textprimary">Portfolio</h1>
-        <p className="mt-0.5 text-xs text-textsecondary">Your holdings and allocation breakdown</p>
+        <p className="mt-0.5 text-xs text-textsecondary">
+          Your holdings and allocation breakdown
+        </p>
       </div>
 
       {loading && !summary ? (
@@ -32,7 +42,9 @@ const PortfolioPage = () => {
           animate={{ opacity: 1, y: 0 }}
           className="rounded-card border border-bordersubtle bg-surface p-5 shadow-sm"
         >
-          <h2 className="mb-4 text-base font-semibold tracking-tight text-textprimary">Holdings</h2>
+          <h2 className="mb-4 text-base font-semibold tracking-tight text-textprimary">
+            Holdings
+          </h2>
           <HoldingsTable holdings={holdings} />
         </motion.div>
 
@@ -42,8 +54,13 @@ const PortfolioPage = () => {
           transition={{ delay: 0.1 }}
           className="rounded-card border border-bordersubtle bg-surface p-5 shadow-sm"
         >
-          <h2 className="mb-4 text-base font-semibold tracking-tight text-textprimary">Allocation</h2>
-          <AllocationChart holdings={holdings} cashBalance={summary?.cashBalance || 0} />
+          <h2 className="mb-4 text-base font-semibold tracking-tight text-textprimary">
+            Allocation
+          </h2>
+          <AllocationChart
+            holdings={holdings}
+            cashBalance={summary?.cashBalance || 0}
+          />
         </motion.div>
       </div>
     </div>

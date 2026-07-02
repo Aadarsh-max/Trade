@@ -145,16 +145,17 @@ const OrderForm = () => {
         )}
 
         <div className="mt-4 flex flex-col gap-2 rounded-control border border-bordersubtle bg-glass p-3">
-          <div className="flex items-center justify-between">
-            <span className="text-xs text-textmuted">Current price</span>
-            <span className="text-xs font-medium tabular-nums text-textsecondary">${currentPrice.toLocaleString()}</span>
-          </div>
-          <div className="flex items-center justify-between border-t border-bordersubtle pt-2">
-            <span className="text-xs text-textmuted">Estimated total</span>
-            <span className="text-sm font-semibold tabular-nums text-textprimary">
-              ${estimatedTotal.toLocaleString(undefined, { maximumFractionDigits: 2 })}
-            </span>
-          </div>
+          <div className="flex justify-between items-center mt-4 px-1">
+          <span className="text-textmuted text-xs">Current price</span>
+          <span className="text-textsecondary text-xs">${currentPrice.toLocaleString()} USD</span>
+        </div>
+
+        <div className="flex justify-between items-center mt-1.5 px-1">
+          <span className="text-textmuted text-xs">Estimated total (INR)</span>
+          <span className="text-textprimary text-sm font-medium">
+            ₹{(estimatedTotal * 83.5).toLocaleString(undefined, { maximumFractionDigits: 2 })}
+          </span>
+        </div>
           <div className="flex items-center justify-between">
             <span className="text-xs text-textmuted">Available balance</span>
             <span className="text-xs font-medium tabular-nums text-textsecondary">₹{balance.toLocaleString()}</span>

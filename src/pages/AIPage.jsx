@@ -3,6 +3,7 @@ import AIChatWidget from '../features/ai/components/AIChatWidget';
 import PortfolioInsights from '../features/ai/components/PortfolioInsights';
 
 const AIPage = () => {
+
   return (
     <div className="animate-fade-in">
       <div className="mb-6 flex items-center gap-2.5">

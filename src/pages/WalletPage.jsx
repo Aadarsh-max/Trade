@@ -8,6 +8,8 @@ import WithdrawModal from '../features/wallet/components/WithdrawModal';
 import TransactionHistory from '../features/wallet/components/TransactionHistory';
 import Button from '../components/common/Button';
 import { formatCurrency } from '../utils/formatters';
+import { verifyStripePaymentApi } from '../api/payments.api';
+import Loader from '../components/common/Loader';
 
 const WalletPage = () => {
   const {
@@ -24,8 +26,12 @@ const WalletPage = () => {
 
   const [depositOpen, setDepositOpen] = useState(false);
   const [withdrawOpen, setWithdrawOpen] = useState(false);
+  const [verifying, setVerifying] = useState(false);
+  const [verifyMessage, setVerifyMessage] = useState('');
   const [searchParams, setSearchParams] = useSearchParams();
+
   const paymentStatus = searchParams.get('payment_status');
+  const sessionId = searchParams.get('session_id');
 
   useEffect(() => {
     fetchBalance();
@@ -33,29 +39,52 @@ const WalletPage = () => {
   }, []);
 
   useEffect(() => {
-    if (paymentStatus === 'success') {
-      const timer = setTimeout(() => {
-        fetchBalance();
-        fetchTransactions();
-        setSearchParams({});
-      }, 2000);
-      return () => clearTimeout(timer);
+    if (paymentStatus === 'success' && sessionId) {
+      handleStripeVerification(sessionId);
+    } else if (paymentStatus === 'cancelled') {
+      setVerifyMessage('Payment was cancelled.');
+      setSearchParams({});
     }
-  }, [paymentStatus]);
+  }, [paymentStatus, sessionId]);
+
+  const handleStripeVerification = async (sessionId) => {
+    setVerifying(true);
+    setVerifyMessage('Verifying your payment...');
+
+    try {
+      await verifyStripePaymentApi(sessionId);
+      setVerifyMessage('Payment verified! Your wallet has been credited.');
+      await fetchBalance();
+      await fetchTransactions();
+    } catch (err) {
+      setVerifyMessage('Payment verification failed. Please contact support.');
+    } finally {
+      setVerifying(false);
+      setSearchParams({});
+    }
+  };
+
+  if (loading) return <Loader fullPage text="Loading wallet" />;
 
   return (
     <div className="animate-fade-in">
-      {paymentStatus === 'success' && (
+      {verifyMessage && (
         <motion.div
           initial={{ opacity: 0, y: -8 }}
           animate={{ opacity: 1, y: 0 }}
-          className="mb-4 flex items-center gap-2 rounded-control border border-success/30 bg-success/10 px-4 py-3 text-sm font-medium text-success"
+          className={`mb-4 flex items-center gap-2 rounded-control border px-4 py-3 text-sm font-medium ${
+            verifyMessage.includes('credited')
+              ? 'border-success/30 bg-success/10 text-success'
+              : verifyMessage.includes('cancelled') || verifyMessage.includes('failed')
+              ? 'border-danger/30 bg-danger/10 text-danger'
+              : 'border-accent/30 bg-accent/10 text-accent'
+          }`}
         >
           <span className="relative flex h-2 w-2 shrink-0">
-            <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-success opacity-75" />
-            <span className="relative inline-flex h-2 w-2 rounded-full bg-success" />
+            <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-current opacity-60" />
+            <span className="relative inline-flex h-2 w-2 rounded-full bg-current" />
           </span>
-          Payment received, confirming your deposit…
+          {verifyMessage}
         </motion.div>
       )}
 
@@ -78,7 +107,7 @@ const WalletPage = () => {
               </span>
               <span className="text-sm font-medium text-textsecondary">Available balance</span>
             </div>
-            {loading ? (
+            {loading || verifying ? (
               <div className="h-10 w-44 animate-pulse rounded-control bg-glass" />
             ) : (
               <p className="text-3xl font-bold tracking-tight tabular-nums text-textprimary sm:text-4xl">

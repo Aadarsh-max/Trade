@@ -8,6 +8,7 @@ import { useMarketStore } from '../features/market/marketSlice';
 import PnlSummary from '../features/portfolio/components/PnlSummary';
 import PriceTicker from '../features/market/components/PriceTicker';
 import Skeleton from '../components/common/Skeleton';
+import Loader from '../components/common/Loader';
 
 const DashboardPage = () => {
   const { fetchBalance } = useWalletStore();
@@ -20,6 +21,8 @@ const DashboardPage = () => {
     fetchWatchlistQuotes();
     subscribeToWatchlist();
   }, []);
+
+  if (loading) return <Loader fullPage text="Loading dashboard" />;
 
   return (
     <div className="animate-fade-in">
