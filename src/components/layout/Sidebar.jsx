@@ -54,10 +54,11 @@ const NavLinks = ({ onItemClick }) => (
 
 const Logo = () => (
   <div className="mb-8 flex items-center gap-2.5 px-2">
-    <div className="relative flex h-9 w-9 items-center justify-center rounded-xl bg-linear-to-br from-accent to-accentstrong shadow-md shadow-accent/20">
-      <LineChart size={18} className="text-white" />
-      <span className="absolute inset-0 rounded-xl ring-1 ring-inset ring-white/20" />
-    </div>
+    <img
+      src="/logo.png"
+      alt="Tradeflow"
+      className="h-9 w-9 rounded-xl object-cover"
+    />
     <div className="flex flex-col leading-none">
       <span className="text-base font-semibold tracking-tight text-textprimary">Tradeflow</span>
       <span className="text-[10px] font-medium uppercase tracking-wider text-textmuted">Markets</span>
